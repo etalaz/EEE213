@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Presentation</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <p class="site-title">EEE213 Scientific Programming</p>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="numerical.html">Numerical problem</a>
+    <a href="model.html">Data and model</a>
+    <a href="presentation.html" aria-current="page">Presentation</a>
+    <a href="code.html">Code and statement</a>
+  </nav>
+</header>
+<main>
+  <h1>Presentation: linear regression</h1>
+  <p class="lead">Method 1, 4 minutes plus 1 minute of questions.</p>
+
+  <h2>Outline</h2>
+  <div class="table-wrap">
+  <table>
+    <tr><th>Part</th><th>Content</th><th class="num">Time (min)</th></tr>
+    <tr><td>Definition</td><td>Regression: predicts a number (the output in MW) from the features.</td><td class="num">0.5</td></tr>
+    <tr><td>How it learns</td><td>Weighted sum of features plus an intercept; least squares chooses the weights that minimise the sum of squared errors.</td><td class="num">1.5</td></tr>
+    <tr><td>Hyperparameters</td><td>None for plain linear regression; flexibility is fixed by the choice of features.</td><td class="num">0.5</td></tr>
+    <tr><td>Result on our data</td><td>Test MAE 3.66 MW with four features and 4.33 MW with AT only, against the baseline of 14.72 MW.</td><td class="num">1</td></tr>
+    <tr><td>Strength and limit</td><td>Strength: simple and easy to interpret. Limit: only straight-line relationships.</td><td class="num">0.5</td></tr>
+  </table>
+  </div>
+
+  <h2>Slides</h2>
+  <p>The slides will be linked here after the presentation.</p>
+
+  <h2>Sources</h2>
+  <ul>
+    <li>P. Tüfekci and H. Kaya, "Combined Cycle Power Plant," UCI Machine Learning Repository, 2014, doi:10.24432/C5002N. CC BY 4.0.</li>
+    <li>scikit-learn user guide, <a href="https://scikit-learn.org/stable/modules/linear_model.html">linear models</a>.</li>
+  </ul>
+  <p>AI assistance: see the statement on the <a href="code.html">Code and statement</a> page.</p>
+</main>
+<footer>EEE213, İzmir Kâtip Çelebi University. Repository: <a href="https://github.com/etalaz/EEE213">github.com/etalaz/EEE213</a></footer>
+</body>
+</html>

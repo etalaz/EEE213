@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Numerical problem</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <p class="site-title">EEE213 Scientific Programming</p>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="numerical.html" aria-current="page">Numerical problem</a>
+    <a href="model.html">Data and model</a>
+    <a href="presentation.html">Presentation</a>
+    <a href="code.html">Code and statement</a>
+  </nav>
+</header>
+<main>
+  <h1>Numerical problem 1: diode–resistor operating point</h1>
+  <p class="lead">Method: Newton–Raphson. Code: <a href="newton_diode.py">newton_diode.py</a>.</p>
+
+  <h2>Model and assumptions</h2>
+  <p>A voltage source <code>Vs</code> drives a resistor <code>R</code> in series with a diode. The unknown is the diode voltage <code>Vd</code>. Assumptions: ideal Shockley diode, constant temperature (about 300 K), steady state (DC), no series resistance inside the diode.</p>
+  <div class="table-wrap">
+  <table>
+    <tr><th>Quantity</th><th class="num">Value</th><th>Unit</th></tr>
+    <tr><td>Source voltage Vs</td><td class="num">5</td><td>V</td></tr>
+    <tr><td>Resistance R</td><td class="num">1000</td><td>Ω</td></tr>
+    <tr><td>Saturation current Is</td><td class="num">1×10<sup>−12</sup></td><td>A</td></tr>
+    <tr><td>Ideality factor n</td><td class="num">1</td><td>dimensionless</td></tr>
+    <tr><td>Thermal voltage V<sub>T</sub></td><td class="num">0.02585</td><td>V</td></tr>
+  </table>
+  </div>
+
+  <h2>Equations</h2>
+  <p>Diode current (Shockley): <code>Id = Is (exp(Vd / (n V<sub>T</sub>)) − 1)</code> in A. Resistor current: <code>Ir = (Vs − Vd) / R</code> in A. Kirchhoff's current law requires <code>Id = Ir</code>, so the unknown <code>Vd</code> is the root of</p>
+  <div class="eq"><code>f(Vd) = Is (exp(Vd / (n V<sub>T</sub>)) − 1) − (Vs − Vd) / R = 0</code> (A)</div>
+
+  <h2>Derivative derived by hand</h2>
+  <p>Differentiating term by term with respect to <code>Vd</code>:</p>
+  <div class="eq"><code>f′(Vd) = (Is / (n V<sub>T</sub>)) exp(Vd / (n V<sub>T</sub>)) + 1 / R</code> (A/V)</div>
+  <p>The Newton–Raphson step is <code>Vd<sub>k+1</sub> = Vd<sub>k</sub> − f(Vd<sub>k</sub>) / f′(Vd<sub>k</sub>)</code>, starting from <code>Vd<sub>0</sub> = 0.6 V</code> and stopping when the step is below 10<sup>−12</sup> V.</p>
+
+  <h2>Iteration results</h2>
+  <div class="table-wrap">
+  <table>
+    <tr><th class="num">k (count)</th><th class="num">Vd (V)</th><th class="num">f(Vd) (A)</th><th class="num">step (V)</th></tr>
+    <tr><td class="num">0</td><td class="num">0.600000000</td><td class="num">7.631953×10<sup>−3</sup></td><td class="num">–</td></tr>
+    <tr><td class="num">1</td><td class="num">0.583638314</td><td class="num">1.972900×10<sup>−3</sup></td><td class="num">−1.636169×10<sup>−2</sup></td></tr>
+    <tr><td class="num">2</td><td class="num">0.575688420</td><td class="num">2.734176×10<sup>−4</sup></td><td class="num">−7.949894×10<sup>−3</sup></td></tr>
+    <tr><td class="num">3</td><td class="num">0.574192130</td><td class="num">7.720213×10<sup>−6</sup></td><td class="num">−1.496290×10<sup>−3</sup></td></tr>
+    <tr><td class="num">4</td><td class="num">0.574147378</td><td class="num">6.640164×10<sup>−9</sup></td><td class="num">−4.475232×10<sup>−5</sup></td></tr>
+    <tr><td class="num">5</td><td class="num">0.574147339</td><td class="num">4.935288×10<sup>−15</sup></td><td class="num">−3.855783×10<sup>−8</sup></td></tr>
+    <tr><td class="num">6</td><td class="num">0.574147339</td><td class="num">8.673617×10<sup>−19</sup></td><td class="num">−2.865807×10<sup>−14</sup></td></tr>
+  </table>
+  </div>
+  <p>Result after 6 iterations (count): <strong>Vd = 0.574147 V</strong>, <strong>Id = 4.425853 mA</strong>. The step shrinks roughly as the square of the previous step, as expected for quadratic convergence.</p>
+
+  <h2>Independent check</h2>
+  <p>Two methods that do not use the derivative give the same operating point.</p>
+  <div class="table-wrap">
+  <table>
+    <tr><th>Method</th><th class="num">Vd (V)</th><th class="num">Id (mA)</th></tr>
+    <tr><td>Newton–Raphson</td><td class="num">0.574147</td><td class="num">4.425853</td></tr>
+    <tr><td>Closed form with the Lambert W function</td><td class="num">0.574147</td><td class="num">4.425853</td></tr>
+    <tr><td>Brent bracketing root finder on [0, 5] V</td><td class="num">0.574147</td><td class="num">4.425853</td></tr>
+  </table>
+  </div>
+  <p>The difference between Newton–Raphson and the Lambert W solution is below the printed precision (0.00 V in the program output). Physical check: the resistor drops 5 − 0.574147 = 4.425853 V, and 4.425853 V / 1000 Ω = 4.425853 mA, equal to the diode current. A silicon diode near 0.57 V at a few milliamperes is also plausible.</p>
+</main>
+<footer>EEE213, İzmir Kâtip Çelebi University. Repository: <a href="https://github.com/etalaz/EEE213">github.com/etalaz/EEE213</a></footer>
+</body>
+</html>
