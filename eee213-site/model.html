@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data and model</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <p class="site-title">EEE213 Scientific Programming</p>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="numerical.html">Numerical problem</a>
+    <a href="model.html" aria-current="page">Data and model</a>
+    <a href="presentation.html">Presentation</a>
+    <a href="code.html">Code and statement</a>
+  </nav>
+</header>
+<main>
+  <h1>Data and model: linear regression</h1>
+  <p class="lead">Method 1 applied to the combined cycle power plant data. Code: <a href="linear_regression.py">linear_regression.py</a>.</p>
+
+  <h2>Data</h2>
+  <p>Hourly averages from a combined cycle power plant (gas and steam turbines), 2006–2011, full load only. File: <a href="ccpp.csv">ccpp.csv</a>.</p>
+  <div class="table-wrap">
+  <table>
+    <tr><th>Column</th><th>Quantity</th><th>Unit</th></tr>
+    <tr><td>AT</td><td>Ambient air temperature</td><td>°C</td></tr>
+    <tr><td>V</td><td>Steam-turbine exhaust vacuum</td><td>cm Hg</td></tr>
+    <tr><td>AP</td><td>Ambient air pressure</td><td>mbar</td></tr>
+    <tr><td>RH</td><td>Relative humidity</td><td>%</td></tr>
+    <tr><td>PE</td><td>Net electrical energy output (target)</td><td>MW</td></tr>
+  </table>
+  </div>
+  <p>Source: P. Tüfekci and H. Kaya, "Combined Cycle Power Plant," UCI Machine Learning Repository, 2014, <a href="https://doi.org/10.24432/C5002N">doi:10.24432/C5002N</a>. Licence: CC BY 4.0.</p>
+
+  <h2>Checks</h2>
+  <ul>
+    <li>Rows: 9,568 (count). Missing values: 0 (count).</li>
+    <li>Exact duplicate rows: 41 (count). Decision: keep them, because the rows are hourly averages rounded to two decimals and none is proven to be an error.</li>
+    <li>All values lie in plausible ranges for the plant (for example AT 1.81–37.11 °C, PE 420.26–495.76 MW).</li>
+  </ul>
+
+  <h2>Split</h2>
+  <p>Split once, before any training: the first 7,654 rows are the training set and the last 1,914 rows are the test set (counts). The model is fitted on the training set only and evaluated once on the test set.</p>
+
+  <h2>Model</h2>
+  <p>Linear regression: the predicted output is a weighted sum of the features plus an intercept, <code>PE = w<sub>1</sub>·AT + w<sub>2</sub>·V + w<sub>3</sub>·AP + w<sub>4</sub>·RH + b</code>. Training chooses the weights that minimise the sum of squared errors (least squares). Linear regression has no hyperparameter.</p>
+
+  <h2>Baseline and error</h2>
+  <p>The baseline always predicts the training mean of PE, 454.44 MW. Error measure: mean absolute error (MAE) in MW on the 1,914 test rows.</p>
+  <div class="table-wrap">
+  <table>
+    <tr><th>Model</th><th class="num">Training MAE (MW)</th><th class="num">Test MAE (MW)</th></tr>
+    <tr><td>Baseline (training mean)</td><td class="num">–</td><td class="num">14.72</td></tr>
+    <tr><td>Linear, AT only</td><td class="num">4.27</td><td class="num">4.33</td></tr>
+    <tr><td>Linear, four features</td><td class="num">3.62</td><td class="num">3.66</td></tr>
+  </table>
+  </div>
+  <p>Fitted four-feature model (weights in MW per unit of the feature): AT −1.992, V −0.227, AP +0.062, RH −0.161, intercept 454.98 MW. The test error of 3.66 MW is about a quarter of the baseline error. Training and test errors are close (3.62 and 3.66 MW), so there is no sign of overfitting.</p>
+
+  <h2>Limits</h2>
+  <p>The data were recorded at full load, so the model cannot be trusted at other loads. A straight line cannot capture curved relationships, so a more flexible method such as k-nearest neighbours can do better on the same split.</p>
+</main>
+<footer>EEE213, İzmir Kâtip Çelebi University. Repository: <a href="https://github.com/etalaz/EEE213">github.com/etalaz/EEE213</a></footer>
+</body>
+</html>

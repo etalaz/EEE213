@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Presentation</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <p class="site-title">EEE213 Scientific Programming</p>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="numerical.html">Numerical problem</a>
+    <a href="model.html">Data and model</a>
+    <a href="presentation.html" aria-current="page">Presentation</a>
+    <a href="code.html">Code and statement</a>
+  </nav>
+</header>
+<main>
+  <h1>Presentation: k-nearest neighbours</h1>
+  <p class="lead">Week 10 method presentation, 4 minutes plus 1 minute of questions.</p>
+
+  <h2>Slides</h2>
+  <p><a href="knn_presentation.pptx">knn_presentation.pptx</a> (6 slides, speaker notes included).</p>
+
+  <h2>Outline</h2>
+  <div class="table-wrap">
+  <table>
+    <tr><th>Part</th><th>Content</th><th class="num">Time (min)</th></tr>
+    <tr><td>Definition</td><td>Regression: predicts the plant output PE (MW) from AT, V, AP and RH.</td><td class="num">0.5</td></tr>
+    <tr><td>How it learns</td><td>Training stores the 7,654 training rows. A new hour is predicted as the average PE of its k nearest training hours, after scaling the features with training statistics.</td><td class="num">1.5</td></tr>
+    <tr><td>Hyperparameters</td><td>The number of neighbours k, chosen by 5-fold cross-validation inside the training rows.</td><td class="num">0.5</td></tr>
+    <tr><td>Result on our data</td><td>Test MAE 2.74 MW, against the baseline of 14.72 MW.</td><td class="num">1</td></tr>
+    <tr><td>Strength and limit</td><td>Strength: no assumed shape. Limit: it cannot extrapolate, for example to half load.</td><td class="num">0.5</td></tr>
+  </table>
+  </div>
+
+  <h2>Result on the Week 09 split</h2>
+  <p>Same split for every model: first 7,654 rows for training, last 1,914 rows for testing. k was chosen by cross-validation on the training rows; the test set was used once. Code: <a href="knn.py">knn.py</a>.</p>
+  <div class="table-wrap">
+  <table>
+    <tr><th>Model</th><th class="num">Test MAE (MW)</th></tr>
+    <tr><td>Baseline (training mean)</td><td class="num">14.72</td></tr>
+    <tr><td>Line from AT</td><td class="num">4.33</td></tr>
+    <tr><td>Linear, four features</td><td class="num">3.66</td></tr>
+    <tr><td>k-NN, k = 3</td><td class="num">2.74</td></tr>
+  </table>
+  </div>
+  <p>The cross-validation error is lowest at k = 3 (2.82 MW); k = 1 gives 3.02 MW and k = 50 gives 3.30 MW.</p>
+
+  <h2>Figures</h2>
+  <p><img src="knn_cv_curve.png" alt="Cross-validation MAE against the number of neighbours k, lowest at k equal to 3" style="max-width:100%;height:auto"></p>
+  <p><img src="knn_comparison.png" alt="Test MAE: baseline 14.72, line from AT 4.33, linear four features 3.66, k-NN 2.74 MW" style="max-width:100%;height:auto"></p>
+  <p><img src="knn_neighbours.png" alt="Training hours in scaled AT and V coloured by output, with a new hour and its 3 nearest hours circled" style="max-width:100%;height:auto"></p>
+  <p>The last figure uses 2 of the 4 features, only to draw the neighbours on a plane. Code: <a href="plot_neighbours.py">plot_neighbours.py</a>.</p>
+
+  <h2>Sources</h2>
+  <ul>
+    <li>T. Hastie, R. Tibshirani, and J. Friedman, The Elements of Statistical Learning, 2nd ed. New York, NY, USA: Springer, 2009, ch. 13.</li>
+    <li>scikit-learn developers, "1.6. Nearest neighbors," scikit-learn user guide. [Online]. Available: <a href="https://scikit-learn.org/stable/modules/neighbors.html">scikit-learn.org/stable/modules/neighbors.html</a></li>
+    <li>P. Tüfekci and H. Kaya, "Combined Cycle Power Plant," UCI Machine Learning Repository, 2014, <a href="https://doi.org/10.24432/C5002N">doi:10.24432/C5002N</a>. CC BY 4.0.</li>
+  </ul>
+  <p>AI assistance: see the statement on the <a href="code.html">Code and statement</a> page.</p>
+</main>
+<footer>EEE213, İzmir Kâtip Çelebi University. Repository: <a href="https://github.com/etalaz/EEE213">github.com/etalaz/EEE213</a></footer>
+</body>
+</html>
